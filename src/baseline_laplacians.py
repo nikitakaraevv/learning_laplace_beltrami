@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.spatial as spatial
 import scipy.sparse as sparse
+from scipy.sparse.linalg import eigs
+
 ########################################################################################################################################################################################
 # function that implements Belkins Pointcloud Laplacian Operator as per the paper: http://web.cse.ohio-state.edu/~wang.1016/papers/pcdlaplace_soda.pdf  
 # Inputs: 1. Matrix V -- N x 3 matrix of point cloud coordinates
@@ -17,7 +19,7 @@ import scipy.sparse as sparse
 def Belkin_Pointcloud_Laplacian(V,numEigs,r_pc=0.05):
 
     D = spatial.distance.cdist(V,V,'euclidean') # Pairwise Euclidean Distance Matrix
-    
+     
     Ns = V.shape[0]
     
     t=np.mean(D); # t parameter for PCD-LAPLACE
@@ -116,7 +118,7 @@ def Belkin_Pointcloud_Laplacian(V,numEigs,r_pc=0.05):
         
     L = D+W    
     
-    evals,evecs = sparse.linalg.eigs(L, k=numEigs, M=None, sigma=None, which='SM', v0=None, ncv=None, maxiter=None, tol=0, return_eigenvectors=True, Minv=None, OPinv=None, OPpart=None)
+    evals,evecs = eigs(L, k=numEigs, M=None, sigma=None, which='SM', v0=None, ncv=None, maxiter=None, tol=0, return_eigenvectors=True, Minv=None, OPinv=None, OPpart=None)
         
     Laplacian = {'L':L, 'evals':np.real(evals), 'evecs':np.real(evecs)}
 
